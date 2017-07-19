@@ -1,6 +1,28 @@
 import 'whatwg-fetch'
 
+const mockApi = {}
+const mockData = {}
+const _options = {}
+
+
+export function config(options){
+	Object.assign(_options, options)
+}
+
+export function mock(url, handler){
+	mockApi[url] = handler
+}
+
 export function get(url, headers){
+
+	if(_options.mock){
+		return new Promise((resolve, reject) =>{
+			setTimeout(()=>{
+				resolve(mockApi[url](headers))
+			},0)
+		})
+	}
+
 	headers = {
 		method: 'GET',
  	 	headers: {
@@ -19,6 +41,14 @@ export function get(url, headers){
 }
 
 export function post(url, data, headers ){
+	if(_options.mock){
+		return new Promise((resolve, reject) =>{
+			setTimeout(()=>{
+				resolve(mockApi[url](data, headers))
+			},0)
+		})
+	}
+
 	headers = {
 		method: 'POST',
  	 	headers: {
@@ -48,8 +78,11 @@ export function test(url, data, result){
 
 
 export default {
+	config,
 	fetch,
 	get,
 	post,
-	test
+	test,
+	mockData,
+	mock
 }
