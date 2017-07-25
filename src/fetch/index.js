@@ -29,8 +29,10 @@ export function get(url, headers) {
 		headers: {
 			'Accept': 'application/json',
 			'Content-Type': 'application/json',
+			...headers,
+			token:_options.token
 		},
-		...headers
+		
 	}
 
 	return new Promise((resolve, reject) => {
@@ -61,8 +63,9 @@ export function post(url, data, headers) {
 		headers: {
 			'Accept': 'application/json',
 			'Content-Type': 'application/json',
+			...headers,
+			token:_options.token
 		},
-		...headers,
 		body: JSON.stringify(data)
 	}
 
