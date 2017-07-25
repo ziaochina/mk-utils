@@ -6,6 +6,9 @@ const _options = {}
 
 export function config(options) {
 	Object.assign(_options, options)
+	if (options.token) {
+		setAccessToken(options.token)
+	}
 }
 
 export function mock(url, handler) {
@@ -30,9 +33,9 @@ export function get(url, headers) {
 			'Accept': 'application/json',
 			'Content-Type': 'application/json',
 			...headers,
-			token:_options.token
+			token: getAccessToken()
 		},
-		
+
 	}
 
 	return new Promise((resolve, reject) => {
@@ -64,7 +67,7 @@ export function post(url, data, headers) {
 			'Accept': 'application/json',
 			'Content-Type': 'application/json',
 			...headers,
-			token:_options.token
+			token: getAccessToken()
 		},
 		body: JSON.stringify(data)
 	}
@@ -103,6 +106,17 @@ function after(response, url, data, headers) {
 	return response
 }
 
+function getAccessToken() {
+	return sessionStorage['_accessToken'] || '';
+}
+
+function setAccessToken(token) {
+	sessionStorage['_accessToken'] = token;
+}
+
+function clearAccessToken() {
+	sessionStorage['_accessToken'] = ''
+}
 
 export default {
 	config,
