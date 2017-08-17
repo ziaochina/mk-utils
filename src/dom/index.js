@@ -1,3 +1,5 @@
+import ReactDOM from 'react-dom'
+
 function getCursorPosition(target) {
     let oTxt1 = target
     let cursorPosition = -1
