@@ -16,8 +16,8 @@ function getCursorPosition(target) {
     return cursorPosition
 }
 
-function gridCellAutoFocus(editCtrlClassName) {
-    const editorDOM = ReactDOM.findDOMNode(this.component).querySelector(editCtrlClassName)
+function gridCellAutoFocus(container,editCtrlClassName) {
+    const editorDOM = ReactDOM.findDOMNode(container).querySelector(editCtrlClassName)
     if (!editorDOM) return
 
     if (editorDOM.className.indexOf('input') != -1) {
