@@ -64,6 +64,6 @@ function cursorAtBegin(e) {
 export default {
     getCursorPosition,
     gridCellAutoFocus,
-    cursorIsEnd,
-    cursorIsBegin
+    cursorAtEnd,
+    cursorAtBegin
 }
