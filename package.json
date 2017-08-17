@@ -1,6 +1,6 @@
 {
   "name": "mk-utils",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "mk-utils",
   "main": "./lib/index.js",
   "scripts": {
@@ -19,6 +19,7 @@
   "homepage": "https://github.com/ziaochina/mk-utils#readme",
   "dependencies": {
     "babel-cli": "^6.24.1",
+    "moment": "^2.18.1",
     "whatwg-fetch": "^2.0.3"
   },
   "devDependencies": {
