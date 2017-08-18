@@ -50,6 +50,7 @@ function cursorAtEnd(e) {
     return !e.target.value
         || (selectedText && selectedText.length == e.target.value.length)
         || cursorPosition == e.target.value.length
+        || cursorPosition == -1
 }
 
 function cursorAtBegin(e) {
@@ -59,6 +60,7 @@ function cursorAtBegin(e) {
     return !e.target.value
         || (selectedText && selectedText.length == e.target.value.length)
         || cursorPosition == 0
+        || cursorPosition == -1
 }
 
 
