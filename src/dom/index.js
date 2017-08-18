@@ -51,7 +51,7 @@ function cursorAtEnd(e) {
         || (selectedText && selectedText.length == e.target.value.length)
         || cursorPosition == e.target.value.length
         || cursorPosition == -1
-        || e.target.className.index('picker') != -1
+        || (e.target.className && e.target.className.indexOf('picker') != -1)
 }
 
 function cursorAtBegin(e) {
@@ -62,7 +62,7 @@ function cursorAtBegin(e) {
         || (selectedText && selectedText.length == e.target.value.length)
         || cursorPosition == 0
         || cursorPosition == -1
-        || e.target.className.index('picker') != -1
+        || (e.target.className && e.target.className.indexOf('picker') != -1)
 }
 
 
