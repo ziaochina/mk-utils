@@ -20,8 +20,11 @@ export function get(url, headers) {
 	if (_options.mock) {
 		return new Promise((resolve, reject) => {
 			setTimeout(() => {
+				if (getAccessToken()) {
+					headers = headers ? { ...headers, token: getAccessToken() } : { token: getAccessToken() }
+				}
 				var resp = mockApi[url](headers)
-				resp = after(resp, url, undefined, headers ? { ...headers, token: getAccessToken() } : headers)
+				resp = after(resp, url, undefined, headers)
 				resolve(resp)
 			}, 0)
 		})
@@ -54,7 +57,10 @@ export function post(url, data, headers) {
 	if (_options.mock) {
 		return new Promise((resolve, reject) => {
 			setTimeout(() => {
-				var resp = mockApi[url](data, headers ? { ...headers, token: getAccessToken() } : headers)
+				if (getAccessToken()) {
+					headers = headers ? { ...headers, token: getAccessToken() } : { token: getAccessToken() }
+				}
+				var resp = mockApi[url](data, headers)
 				resp = after(resp, url, data, headers)
 				resolve(resp)
 			}, 0)
