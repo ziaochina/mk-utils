@@ -5,6 +5,7 @@ import path from './path'
 import expression from './expression'
 import matrix from './matrix'
 import dom from './dom'
+import password from './password'
 
 export default {
 	fetch,
@@ -13,5 +14,6 @@ export default {
 	path,
 	expression,
 	matrix,
-	dom
+	dom,
+	password
 }
