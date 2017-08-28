@@ -6,10 +6,12 @@ import expression from './expression'
 import matrix from './matrix'
 import dom from './dom'
 import password from './password'
+import string from './string'
 
 export default {
 	fetch,
 	number,
+	string,
 	moment,
 	path,
 	expression,
