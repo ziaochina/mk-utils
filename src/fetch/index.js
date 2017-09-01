@@ -132,6 +132,7 @@ export default {
 	test,
 	mockData,
 	mock,
+	mockApi,
 	getAccessToken,
 	setAccessToken,
 	clearAccessToken
