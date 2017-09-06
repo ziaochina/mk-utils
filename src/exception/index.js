@@ -2,7 +2,7 @@ const exceptions = []
 
 function error(err){
     console.error(err)
-    exceptions.unshift(error)
+    exceptions.unshift(err)
 }
 
 function clear(){
