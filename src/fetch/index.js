@@ -15,8 +15,11 @@ export function mock(url, handler) {
 	mockApi[url] = handler
 }
 
-export function get(url, headers) {
-	before()
+export function get(url, headers, option) {
+	if (option && option.ignoreAOP !== true) {
+		before()
+	}
+
 	if (_options.mock) {
 		return new Promise((resolve, reject) => {
 			setTimeout(() => {
@@ -24,7 +27,9 @@ export function get(url, headers) {
 					headers = headers ? { ...headers, token: getAccessToken() } : { token: getAccessToken() }
 				}
 				var resp = mockApi[url](headers)
-				resp = after(resp, url, undefined, headers)
+				if (option && option.ignoreAOP !== true) {
+					resp = after(resp, url, undefined, headers)
+				}
 				resolve(resp)
 			}, 0)
 		})
@@ -52,8 +57,10 @@ export function get(url, headers) {
 	})
 }
 
-export function post(url, data, headers) {
-	before(url, data, headers)
+export function post(url, data, headers, option) {
+	if (option && option.ignoreAOP !== true) {
+		before(url, data, headers)
+	}
 	if (_options.mock) {
 		return new Promise((resolve, reject) => {
 			setTimeout(() => {
@@ -61,7 +68,9 @@ export function post(url, data, headers) {
 					headers = headers ? { ...headers, token: getAccessToken() } : { token: getAccessToken() }
 				}
 				var resp = mockApi[url](data, headers)
-				resp = after(resp, url, data, headers)
+				if (option && option.ignoreAOP !== true) {
+					resp = after(resp, url, data, headers)
+				}
 				resolve(resp)
 			}, 0)
 		})
