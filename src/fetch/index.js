@@ -16,7 +16,7 @@ export function mock(url, handler) {
 }
 
 export function get(url, headers, option) {
-	if (option && option.ignoreAOP !== true) {
+	if (!option || option.ignoreAOP !== true) {
 		before()
 	}
 
@@ -63,7 +63,7 @@ export function get(url, headers, option) {
 }
 
 export function post(url, data, headers, option) {
-	if (option && option.ignoreAOP !== true) {
+	if (!option || option.ignoreAOP !== true) {
 		before(url, data, headers)
 	}
 	if (_options.mock) {
