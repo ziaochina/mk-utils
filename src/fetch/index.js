@@ -23,14 +23,19 @@ export function get(url, headers, option) {
 	if (_options.mock) {
 		return new Promise((resolve, reject) => {
 			setTimeout(() => {
-				if (getAccessToken()) {
-					headers = headers ? { ...headers, token: getAccessToken() } : { token: getAccessToken() }
+				try{
+					if (getAccessToken()) {
+						headers = headers ? { ...headers, token: getAccessToken() } : { token: getAccessToken() }
+					}
+					var resp = mockApi[url](headers)
+					if (option && option.ignoreAOP !== true) {
+						resp = after(resp, url, undefined, headers)
+					}
+					resolve(resp)
 				}
-				var resp = mockApi[url](headers)
-				if (option && option.ignoreAOP !== true) {
-					resp = after(resp, url, undefined, headers)
+				catch(e){
+					reject(e)
 				}
-				resolve(resp)
 			}, 0)
 		})
 	}
@@ -64,14 +69,19 @@ export function post(url, data, headers, option) {
 	if (_options.mock) {
 		return new Promise((resolve, reject) => {
 			setTimeout(() => {
-				if (getAccessToken()) {
-					headers = headers ? { ...headers, token: getAccessToken() } : { token: getAccessToken() }
+				try{
+					if (getAccessToken()) {
+						headers = headers ? { ...headers, token: getAccessToken() } : { token: getAccessToken() }
+					}
+					var resp = mockApi[url](data, headers)
+					if (option && option.ignoreAOP !== true) {
+						resp = after(resp, url, data, headers)
+					}
+					resolve(resp)
 				}
-				var resp = mockApi[url](data, headers)
-				if (option && option.ignoreAOP !== true) {
-					resp = after(resp, url, data, headers)
+				catch(e){
+					reject(e)
 				}
-				resolve(resp)
 			}, 0)
 		})
 	}
