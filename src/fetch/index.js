@@ -28,7 +28,7 @@ export function get(url, headers, option) {
 						headers = headers ? { ...headers, token: getAccessToken() } : { token: getAccessToken() }
 					}
 					var resp = mockApi[url](headers)
-					if (option && option.ignoreAOP !== true) {
+					if (!option || option.ignoreAOP !== true) {
 						resp = after(resp, url, undefined, headers)
 					}
 					resolve(resp)
@@ -74,7 +74,7 @@ export function post(url, data, headers, option) {
 						headers = headers ? { ...headers, token: getAccessToken() } : { token: getAccessToken() }
 					}
 					var resp = mockApi[url](data, headers)
-					if (option && option.ignoreAOP !== true) {
+					if (!option || option.ignoreAOP !== true) {
 						resp = after(resp, url, data, headers)
 					}
 					resolve(resp)
