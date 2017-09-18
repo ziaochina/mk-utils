@@ -8,6 +8,7 @@ import dom from './dom'
 import password from './password'
 import string from './string'
 import exception from './exception'
+import tree from './tree'
 
 export default {
 	fetch,
@@ -19,5 +20,6 @@ export default {
 	matrix,
 	dom,
 	password,
-	exception
+	exception,
+	tree,
 }
