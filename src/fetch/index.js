@@ -94,16 +94,16 @@ export function post(url, data, headers, option) {
 					if (getAccessToken()) {
 						headers = headers ? { ...headers, token: getAccessToken() } : { token: getAccessToken() }
 					}
-					var resp = mockApi[url](headers)
+					var resp = mockApi[url](data, headers)
 					if (resp.then && resp.catch) {
 						resp.then(r => {
-							r = after(r, url, undefined, headers)
+							r = after(r, url, data, headers)
 							return resolve(r)
 						}).catch(reject)
 						return resp
 					}
 					else if (!option || option.ignoreAOP !== true) {
-						resp = after(resp, url, undefined, headers)
+						resp = after(resp, url, data, headers)
 					}
 					resolve(resp)
 				}
