@@ -12,8 +12,22 @@ export function config(options) {
 }
 
 export function mock(url, handler) {
-	mockApi[url] = handler
+	if (url && typeof url == "object") {
+		Object.keys(url).forEach(u => {
+			mock(u, url[u])
+		})
+	} else if (url.indexOf("*") != -1) {
+		let paths = url.split('*')
+		let pre = paths.shift()
+		Object.keys(handler).forEach(key => {
+			let theUrl = pre + key + paths.join('*')
+			mock(theUrl, handler[key])
+		})
+	} else {
+		mockApi[url] = handler;
+	}
 }
+
 
 export function get(url, headers, option) {
 	if (!option || option.ignoreAOP !== true) {
@@ -23,17 +37,24 @@ export function get(url, headers, option) {
 	if (_options.mock) {
 		return new Promise((resolve, reject) => {
 			setTimeout(() => {
-				try{
+				try {
 					if (getAccessToken()) {
 						headers = headers ? { ...headers, token: getAccessToken() } : { token: getAccessToken() }
 					}
 					var resp = mockApi[url](headers)
-					if (!option || option.ignoreAOP !== true) {
+					if (resp.then && resp.catch) {
+						resp.then(r => {
+							resp = after(resp, url, undefined, headers)
+							return resolve(resp)
+						}).catch(reject)
+						return resp
+					}
+					else if (!option || option.ignoreAOP !== true) {
 						resp = after(resp, url, undefined, headers)
 					}
 					resolve(resp)
 				}
-				catch(e){
+				catch (e) {
 					reject(e)
 				}
 			}, 0)
@@ -69,17 +90,24 @@ export function post(url, data, headers, option) {
 	if (_options.mock) {
 		return new Promise((resolve, reject) => {
 			setTimeout(() => {
-				try{
+				try {
 					if (getAccessToken()) {
 						headers = headers ? { ...headers, token: getAccessToken() } : { token: getAccessToken() }
 					}
-					var resp = mockApi[url](data, headers)
-					if (!option || option.ignoreAOP !== true) {
-						resp = after(resp, url, data, headers)
+					var resp = mockApi[url](headers)
+					if (resp.then && resp.catch) {
+						resp.then(r => {
+							r = after(r, url, undefined, headers)
+							return resolve(r)
+						}).catch(reject)
+						return resp
+					}
+					else if (!option || option.ignoreAOP !== true) {
+						resp = after(resp, url, undefined, headers)
 					}
 					resolve(resp)
 				}
-				catch(e){
+				catch (e) {
 					reject(e)
 				}
 			}, 0)
