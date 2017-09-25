@@ -94,7 +94,11 @@ export function post(url, data, headers, option) {
 					if (getAccessToken()) {
 						headers = headers ? { ...headers, token: getAccessToken() } : { token: getAccessToken() }
 					}
-					var resp = mockApi[url](data, headers)
+					var mockFun = mockApi[url]
+					if (!mockFun || typeof mockFun != 'function') {
+						throw (url + ':对应的handler无效')
+					}
+					var resp = mockFun(data, headers)
 					if (resp.then && resp.catch) {
 						resp.then(r => {
 							r = after(r, url, data, headers)
