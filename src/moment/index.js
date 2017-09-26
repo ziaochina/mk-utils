@@ -3,7 +3,7 @@ import moment from 'moment'
 function stringToMoment(v) {
     if (!v)
         return v
-    return moment(v)
+    return moment(new Date(v))
 }
 
 function momentToString(v, format) {
