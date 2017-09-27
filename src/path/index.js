@@ -49,10 +49,18 @@ function findPathByEvent(e) {
     }
 
     if(/^16\./.test(React.version)){
-        return e 
-            && e._targetInst 
-            && e._targetInst.memoizedProps
-            && e._targetInst.memoizedProps.path
+          const loop = (inst) => {
+            if(!inst) return ''
+            const p = inst.return
+                && inst.return.memoizedProps
+                && inst.return.memoizedProps.path
+
+            if (!p && inst)
+                return loop(inst.return)
+
+            return p
+        }
+        return loop(e._targetInst)
     }
 }
 
