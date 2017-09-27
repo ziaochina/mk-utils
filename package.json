@@ -1,6 +1,6 @@
 {
   "name": "mk-utils",
-  "version": "1.0.34",
+  "version": "1.0.34-rc.1",
   "description": "mk-utils",
   "main": "./lib/index.js",
   "scripts": {
@@ -23,6 +23,7 @@
     "jsondiffpatch": "^0.2.4",
     "less": "^2.7.2",
     "moment": "^2.18.1",
+    "react": "^16.0.0",
     "whatwg-fetch": "^2.0.3"
   },
   "devDependencies": {
