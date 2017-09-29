@@ -9,6 +9,7 @@ import password from './password'
 import string from './string'
 import exception from './exception'
 import tree from './tree'
+import history from './history'
 
 export default {
 	fetch,
@@ -22,4 +23,5 @@ export default {
 	password,
 	exception,
 	tree,
+	history
 }

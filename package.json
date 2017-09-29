@@ -1,6 +1,6 @@
 {
   "name": "mk-utils",
-  "version": "1.0.36",
+  "version": "1.0.37",
   "description": "mk-utils",
   "main": "./lib/index.js",
   "scripts": {
@@ -19,6 +19,7 @@
   "homepage": "https://github.com/ziaochina/mk-utils#readme",
   "dependencies": {
     "babel-cli": "^6.26.0",
+    "history": "^4.7.2",
     "js-beautify": "^1.6.14",
     "jsondiffpatch": "^0.2.4",
     "less": "^2.7.2",
