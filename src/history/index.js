@@ -35,7 +35,7 @@ function unlisten(selfApp, handler){
         return 
 
     listerners[selfApp][index].unlisten()
-    listerners[selfApp].remove(index)
+    listerners[selfApp].splice(index,1)
 }
 
 
@@ -71,7 +71,8 @@ function pushChildApp(selfApp, childApp){
         segs.push(childApp)
     }
     else{
-        segs[selfIndex + 1] = childApp
+        segs.splice(selfIndex + 1, segs.length - selfIndex, childApp)
+        //segs[selfIndex + 1] = childApp
     }
 
     if(pathname == segs.join('/'))
