@@ -40,7 +40,7 @@ function unlisten(selfApp, handler){
 
 
 function getChildApp(selfApp) {
-    const pathname = hashHistory.location.pathname
+    const pathname = hashHistory.location.pathname + hashHistory.location.search
     if (!pathname || pathname == '/' || pathname.indexOf(selfApp) == -1)
         return 
 
