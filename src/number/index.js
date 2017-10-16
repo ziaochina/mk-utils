@@ -14,13 +14,14 @@ function getPrecision(value) {
     return precision
 }
 
-function format(number, decimals,  thousandsSep, decPoint) {
+function format(number, decimals, thousandsSep, decPoint) {
     number = (number + '').replace(/[^0-9+-Ee.]/g, '')
 
     var n = !isFinite(+number) ? 0 : +number,
         prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
-        sep = (typeof thousandsSep === 'undefined') ? ',' : thousandsSep,
-        dec = (typeof decPoint === 'undefined') ? '.' : decPoint,  
+        sep = typeof thousandsSep !== 'string' ? ',' : thousandsSep,
+        dec = typeof decPoint !== 'string' ? '.' : decPoint,
+
         s = '',
         toFixedFix = function (n, prec) {
             var k = Math.pow(10, prec)
