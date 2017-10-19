@@ -21,12 +21,7 @@ function format(number, decimals, thousandsSep, decPoint) {
         prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
         sep = typeof thousandsSep !== 'string' ? ',' : thousandsSep,
         dec = typeof decPoint !== 'string' ? '.' : decPoint,
-
-        s = '',
-        toFixedFix = function (n, prec) {
-            var k = Math.pow(10, prec)
-            return '' + Math.ceil(n * k) / k
-        }
+        s = ''
 
     s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.')
     var re = /(-?\d+)(\d{3})/
@@ -41,7 +36,24 @@ function format(number, decimals, thousandsSep, decPoint) {
     return s.join(dec)
 }
 
+function toFixedFix(number, prec) {
+    number = (number + '').replace(/[^0-9+-Ee.]/g, '')
+    var k = Math.pow(10, prec)
+    return '' + Math.round(number * k) / k
+}
+
+function round(number, prec) {
+    number = number == undefined ? 0: number
+    number = (number + '').replace(/[^0-9+-Ee.]/g, '')
+    var n = !isFinite(+number) ? 0 : +number,
+        prec = !isFinite(+prec) ? 0 : Math.abs(prec)
+
+    var k = Math.pow(10, prec)
+    return Math.round(number * k) / k
+}
+
 export default {
     getPrecision,
-    format
+    format,
+    round
 }
