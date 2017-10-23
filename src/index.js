@@ -10,6 +10,7 @@ import string from './string'
 import exception from './exception'
 import tree from './tree'
 import history from './history'
+import _ from 'underscore'
 
 export default {
 	fetch,
@@ -23,5 +24,6 @@ export default {
 	password,
 	exception,
 	tree,
-	history
+	history,
+	_
 }

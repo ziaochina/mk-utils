@@ -1,6 +1,6 @@
 {
   "name": "mk-utils",
-  "version": "1.0.48",
+  "version": "1.0.49",
   "description": "mk-utils",
   "main": "./lib/index.js",
   "scripts": {
@@ -25,6 +25,7 @@
     "less": "^2.7.2",
     "moment": "^2.18.1",
     "react": "^16.0.0",
+    "underscore": "^1.8.3",
     "whatwg-fetch": "^2.0.3"
   },
   "devDependencies": {
