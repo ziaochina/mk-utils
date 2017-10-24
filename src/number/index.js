@@ -1,3 +1,5 @@
+import _ from 'underscore'
+
 function getPrecision(value) {
     const valueString = value.toString()
     //取e-后字符转换成int,e-10=>10
@@ -43,7 +45,7 @@ function toFixedFix(number, prec) {
 }
 
 function round(number, prec) {
-    number = number == undefined ? 0: number
+    number = number == undefined ? 0 : number
     number = (number + '').replace(/[^0-9+-Ee.]/g, '')
     var n = !isFinite(+number) ? 0 : +number,
         prec = !isFinite(+prec) ? 0 : Math.abs(prec)
@@ -52,35 +54,34 @@ function round(number, prec) {
     return Math.round(number * k) / k
 }
 
- function moneySmalltoBig(n)     
-    {    
-        var fraction = ['角', '分'];    
-        var digit = ['零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖'];    
-        var unit = [ ['元', '万', '亿'], ['', '拾', '佰', '仟']  ];    
-        var head = n < 0? '欠': '';    
-        n = Math.abs(n);    
-      
-        var s = '';    
-      
-        for (var i = 0; i < fraction.length; i++)     
-        {    
-            s += (digit[Math.floor(n * 10 * Math.pow(10, i)) % 10] + fraction[i]).replace(/零./, '');    
-        }    
-        s = s || '整';    
-        n = Math.floor(n);    
-      
-        for (var i = 0; i < unit[0].length && n > 0; i++)     
-        {    
-            var p = '';    
-            for (var j = 0; j < unit[1].length && n > 0; j++)     
-            {    
-                p = digit[n % 10] + unit[1][j] + p;    
-                n = Math.floor(n / 10);    
-            }    
-            s = p.replace(/(零.)*零$/, '').replace(/^$/, '零')  + unit[0][i] + s;    
-        }    
-        return head + s.replace(/(零.)*零元/, '元').replace(/(零.)+/g, '零').replace(/^整$/, '零元整');    
-    }  
+function moneySmalltoBig(n) {
+    if(! _.isNumber(n) || _.isNaN(n))
+        return ''
+
+    var fraction = ['角', '分'];
+    var digit = ['零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖'];
+    var unit = [['元', '万', '亿'], ['', '拾', '佰', '仟']];
+    var head = n < 0 ? '欠' : '';
+    n = Math.abs(n);
+
+    var s = '';
+
+    for (var i = 0; i < fraction.length; i++) {
+        s += (digit[Math.floor(n * 10 * Math.pow(10, i)) % 10] + fraction[i]).replace(/零./, '');
+    }
+    s = s || '整';
+    n = Math.floor(n);
+
+    for (var i = 0; i < unit[0].length && n > 0; i++) {
+        var p = '';
+        for (var j = 0; j < unit[1].length && n > 0; j++) {
+            p = digit[n % 10] + unit[1][j] + p;
+            n = Math.floor(n / 10);
+        }
+        s = p.replace(/(零.)*零$/, '').replace(/^$/, '零') + unit[0][i] + s;
+    }
+    return head + s.replace(/(零.)*零元/, '元').replace(/(零.)+/g, '零').replace(/^整$/, '零元整');
+}
 
 export default {
     getPrecision,
