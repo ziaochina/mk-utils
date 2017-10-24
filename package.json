@@ -1,6 +1,6 @@
 {
   "name": "mk-utils",
-  "version": "1.0.49",
+  "version": "1.0.50",
   "description": "mk-utils",
   "main": "./lib/index.js",
   "scripts": {
