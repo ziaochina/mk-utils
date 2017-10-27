@@ -1,8 +1,24 @@
 import * as history from 'history'
 
-const hashHistory = history.createHashHistory()
+const hashHistory = history.createHashHistory(),
+    listerners = {},
+    _options = {} //{isAlias:()=>{}, toAlias:()=>{}, toRealName:()=>{}}
 
-const listerners = {}
+function config(options) {
+    Object.assign(_options, options)
+}
+
+function getAlias(pathName) {
+    if (!_options.isAlias || !_options.toAlias || _options.isAlias(pathName))
+        return pathName
+    return _options.toAlias(pathName)
+}
+
+function getRealName(pathName) {
+    if (!_options.isAlias || !_options.toRealName || !_options.isAlias(pathName))
+        return pathName
+    return _options.toRealName(pathName)
+}
 
 function listen(selfApp, handler) {
     if (!listerners[selfApp]) {
@@ -11,10 +27,10 @@ function listen(selfApp, handler) {
 
     var h = listerners[selfApp].find(o => o.listen == handler)
     if (!h) {
-        
+
         h = handler
         var unlisten = hashHistory.listen((location, action) => {
-            const childApp = getChildApp(selfApp, location.pathname)
+            const childApp = getChildApp(selfApp)
             handler(childApp, location, action)
         })
 
@@ -25,30 +41,31 @@ function listen(selfApp, handler) {
     }
 }
 
-function unlisten(selfApp, handler){
-    if (!listerners[selfApp]) 
+function unlisten(selfApp, handler) {
+    if (!listerners[selfApp])
         return
 
     const index = listerners[selfApp].findIndex(o => o.listen == handler)
 
-    if(index == -1)
-        return 
+    if (index == -1)
+        return
 
     listerners[selfApp][index].unlisten()
-    listerners[selfApp].splice(index,1)
+    listerners[selfApp].splice(index, 1)
 }
 
 
 function getChildApp(selfApp) {
-    const pathname = hashHistory.location.pathname + hashHistory.location.search
-    if (!pathname || pathname == '/' || pathname.indexOf(selfApp) == -1)
-        return 
+    var pathName = hashHistory.location.pathname + hashHistory.location.search
+    pathName = getRealName(pathName)
+    if (!pathName || pathName == '/' || pathName.indexOf(selfApp) == -1)
+        return
 
-    const segs = pathname.split('/')
+    const segs = pathName.split('/')
 
-    const selfIndex = segs.findIndex( s => s.indexOf(selfApp) != -1)
+    const selfIndex = segs.findIndex(s => s.indexOf(selfApp) != -1)
 
-    if(segs.length -1 == selfIndex)
+    if (segs.length - 1 == selfIndex)
         return
 
     const ret = segs[selfIndex + 1]
@@ -56,33 +73,35 @@ function getChildApp(selfApp) {
     return ret == '/' ? undefined : ret
 }
 
-function pushChildApp(selfApp, childApp){
-    const pathname = hashHistory.location.pathname
-    if (!pathname || pathname == '/' || pathname.indexOf(selfApp) == -1){
-        hashHistory.push(`/${selfApp}/${childApp}`)
+function pushChildApp(selfApp, childApp) {
+    var pathName = hashHistory.location.pathname
+    pathName = getRealName(pathName)
+    if (!pathName || pathName == '/' || pathName.indexOf(selfApp) == -1) {
+        hashHistory.push(getAlias(`/${selfApp}/${childApp}`))
         return
     }
-    
-    const segs = pathname.split('/')
 
-    const selfIndex = segs.findIndex( s => s.indexOf(selfApp) != -1)
+    const segs = pathName.split('/')
 
-    if(segs.length -1 == selfIndex){
+    const selfIndex = segs.findIndex(s => s.indexOf(selfApp) != -1)
+
+    if (segs.length - 1 == selfIndex) {
         segs.push(childApp)
     }
-    else{
+    else {
         segs.splice(selfIndex + 1, segs.length - selfIndex, childApp)
         //segs[selfIndex + 1] = childApp
     }
 
-    if(pathname == segs.join('/'))
+    if (pathName == segs.join('/'))
         return
 
-    hashHistory.push(segs.join('/'))
+    hashHistory.push(getAlias(segs.join('/')))
 }
 
 
 export default {
+    config,
     listen,
     unlisten,
     getChildApp,
