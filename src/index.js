@@ -10,7 +10,7 @@ import string from './string'
 import exception from './exception'
 import tree from './tree'
 import history from './history'
-import _ from 'underscore'
+import _ from 'lodash'
 
 export default {
 	fetch,
