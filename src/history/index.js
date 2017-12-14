@@ -1,8 +1,13 @@
 import * as history from 'history'
 
-const hashHistory = history.createHashHistory(),
-    listerners = {},
+var hashHistory
+const listerners = {},
     _options = {} //{isAlias:()=>{}, toAlias:()=>{}, toRealName:()=>{}}
+
+function setHistoryInstance() {
+    if (!hashHistory)
+        hashHistory = history.createHashHistory()
+}
 
 function config(options) {
     Object.assign(_options, options)
@@ -21,6 +26,7 @@ function getRealName(pathName) {
 }
 
 function listen(selfApp, handler) {
+    setHistoryInstance()
     if (!listerners[selfApp]) {
         listerners[selfApp] = []
     }
@@ -56,6 +62,7 @@ function unlisten(selfApp, handler) {
 
 
 function getChildApp(selfApp) {
+    setHistoryInstance()
     var pathName = hashHistory.location.pathname + hashHistory.location.search
     pathName = getRealName(pathName)
     if (!pathName || pathName == '/' || pathName.indexOf(selfApp) == -1)
@@ -74,6 +81,7 @@ function getChildApp(selfApp) {
 }
 
 function pushChildApp(selfApp, childApp) {
+    setHistoryInstance()
     var pathName = hashHistory.location.pathname
     pathName = getRealName(pathName)
     if (!pathName || pathName == '/' || pathName.indexOf(selfApp) == -1) {
@@ -106,5 +114,5 @@ export default {
     unlisten,
     getChildApp,
     pushChildApp,
-    location: hashHistory.location
+    location: hashHistory ? hashHistory.location : null
 }

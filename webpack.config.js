@@ -14,6 +14,9 @@ plugins.push(new webpack.DefinePlugin({
 if (env === 'production' && compress) {
     plugins.push(
         new webpack.optimize.UglifyJsPlugin({
+            output: {
+                "ascii_only": true
+            },
             compressor: {
                 warnings: false
             }
