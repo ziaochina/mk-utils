@@ -1,5 +1,9 @@
 import _ from 'lodash'
-
+/**
+ * 获取精度 
+ * @param {*值} value 
+ * 111.05 => 2
+ */
 function getPrecision(value) {
     const valueString = value.toString()
     //取e-后字符转换成int,e-10=>10
@@ -16,6 +20,13 @@ function getPrecision(value) {
     return precision
 }
 
+/**
+ * 数字格式化
+ * @param {*值} number 
+ * @param {*小数位数} decimals 
+ * @param {*千分符} thousandsSep 
+ * @param {*小数点字符} decPoint 
+ */
 function format(number, decimals, thousandsSep, decPoint) {
     number = (number + '').replace(/[^0-9+-Ee.]/g, '')
 
@@ -38,12 +49,18 @@ function format(number, decimals, thousandsSep, decPoint) {
     return s.join(dec)
 }
 
+/**
+ * 浮点精度
+ */
 function toFixedFix(number, prec) {
     number = (number + '').replace(/[^0-9+-Ee.]/g, '')
     var k = Math.pow(10, prec)
     return '' + Math.round(number * k) / k
 }
 
+/**
+ * 四舍5入
+ */
 function round(number, prec) {
     number = number == undefined ? 0 : number
     number = (number + '').replace(/[^0-9+-Ee.]/g, '')
@@ -54,8 +71,12 @@ function round(number, prec) {
     return Math.round(number * k) / k
 }
 
+/**
+ * 小写转大写金额
+ * @param {*小写金额} n 
+ */
 function moneySmalltoBig(n) {
-    if(! _.isNumber(n) || _.isNaN(n))
+    if (!_.isNumber(n) || _.isNaN(n))
         return ''
 
     var fraction = ['角', '分'];

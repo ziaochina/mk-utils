@@ -12,11 +12,22 @@ export function config(options) {
 }
 
 export function mock(url, handler) {
+	/*url = {
+		'test/url1':()=>{},
+		'test/url2':()=>{}
+	}*/
 	if (url && typeof url == "object") {
 		Object.keys(url).forEach(u => {
 			mock(u, url[u])
 		})
-	} else if (url.indexOf("*") != -1) {
+	} 
+	
+	//url=v1/*/
+	//handler={
+	//	person:()=>{}
+	//}
+	//
+	else if (url.indexOf("*") != -1) {
 		let paths = url.split('*')
 		let pre = paths.shift()
 		Object.keys(handler).forEach(key => {
@@ -28,6 +39,17 @@ export function mock(url, handler) {
 	}
 }
 
+function isMockUrl(url){
+	if(!_options.excludeMockUrls)
+		return _options.mock
+
+	if(_options.excludeMockUrls.find(o=>o==url)){
+		return !_options.mock
+	}
+	else{
+		return _options.mock
+	}
+}
 
 export function get(url, headers, option) {
 	if (!option || option.ignoreAOP !== true) {
