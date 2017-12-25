@@ -56,7 +56,7 @@ export function get(url, headers, option) {
 		before()
 	}
 
-	if (_options.mock) {
+	if (isMockUrl(url)) {
 		return new Promise((resolve, reject) => {
 			setTimeout(() => {
 				try {
@@ -109,7 +109,7 @@ export function post(url, data, headers, option) {
 	if (!option || option.ignoreAOP !== true) {
 		before(url, data, headers)
 	}
-	if (_options.mock) {
+	if (isMockUrl(url)) {
 		return new Promise((resolve, reject) => {
 			setTimeout(() => {
 				try {
