@@ -20,8 +20,8 @@ export function mock(url, handler) {
 		Object.keys(url).forEach(u => {
 			mock(u, url[u])
 		})
-	} 
-	
+	}
+
 	//url=v1/*/
 	//handler={
 	//	person:()=>{}
@@ -39,14 +39,14 @@ export function mock(url, handler) {
 	}
 }
 
-function isMockUrl(url){
-	if(!_options.excludeMockUrls)
+function isMockUrl(url) {
+	if (!_options.excludeMockUrls)
 		return _options.mock
 
-	if(_options.excludeMockUrls.find(o=>o==url)){
+	if (_options.excludeMockUrls.find(o => o == url)) {
 		return !_options.mock
 	}
-	else{
+	else {
 		return _options.mock
 	}
 }
@@ -159,6 +159,32 @@ export function post(url, data, headers, option) {
 
 }
 
+export function formPost(url, data, isFree) {
+	data = data || {}
+	var accessToken = getAccessToken()//toke in sessionStorage
+	if (!!accessToken && !isFree) {
+		data.token = accessToken
+	}
+
+	var postForm = document.createElement("form")//表单对象
+	postForm.method = "post"
+	postForm.action = formatUrl(url)
+	postForm.target = "_blank"
+
+	var keys = Object.keys(data)
+
+	for (var k of keys) {
+		var emailInput = document.createElement("input");//email input
+		emailInput.setAttribute("name", k)
+		emailInput.setAttribute("value", data[k])
+		postForm.appendChild(emailInput)
+	}
+
+	document.body.appendChild(postForm)
+	postForm.submit()
+	document.body.removeChild(postForm)
+}
+
 export function test(url, data, result) {
 	return new Promise((resolve, reject) => {
 		setTimeout(() => {
@@ -198,6 +224,7 @@ export default {
 	fetch,
 	get,
 	post,
+	formPost,
 	test,
 	mockData,
 	mock,
