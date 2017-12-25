@@ -168,7 +168,7 @@ export function formPost(url, data, isFree) {
 
 	var postForm = document.createElement("form")//表单对象
 	postForm.method = "post"
-	postForm.action = formatUrl(url)
+	postForm.action = url
 	postForm.target = "_blank"
 
 	var keys = Object.keys(data)
