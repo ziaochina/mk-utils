@@ -1,5 +1,5 @@
-import beautify from './beautify'
-import json from './json'
+//import beautify from './beautify'
+//import json from './json'
 import fetch from './fetch'
 import number from './number'
 import moment from './moment'
@@ -12,12 +12,12 @@ import string from './string'
 import exception from './exception'
 import tree from './tree'
 import history from './history'
-import less from './less'
+//import less from './less'
 import _ from 'lodash'
 
 export default {
-	beautify,
-	json,
+	//beautify,
+	//json,
 	fetch,
 	number,
 	string,
@@ -30,6 +30,6 @@ export default {
 	exception,
 	tree,
 	history,
-	less,
+	//less,
 	_
 }
