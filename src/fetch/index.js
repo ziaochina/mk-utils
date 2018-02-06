@@ -89,7 +89,8 @@ export function get(url, headers, option) {
 			'Accept': 'application/json',
 			'Content-Type': 'application/json',
 			...headers,
-			token: getAccessToken()
+			token: getAccessToken(),
+			"Authorization": getAccessToken()? "Bearer " + getAccessToken() : ''
 		},
 
 	}
@@ -142,7 +143,8 @@ export function post(url, data, headers, option) {
 			'Accept': 'application/json',
 			'Content-Type': 'application/json',
 			...headers,
-			token: getAccessToken()
+			token: getAccessToken(),
+			"Authorization": getAccessToken()? "Bearer " + getAccessToken() : ''
 		},
 		body: JSON.stringify(data)
 	}
@@ -206,6 +208,7 @@ function after(response, url, data, headers) {
 
 	return response
 }
+
 
 function getAccessToken() {
 	return sessionStorage['_accessToken'] || '';
