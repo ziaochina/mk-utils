@@ -12,11 +12,22 @@ export function config(options) {
 }
 
 export function mock(url, handler) {
+	/*url = {
+		'test/url1':()=>{},
+		'test/url2':()=>{}
+	}*/
 	if (url && typeof url == "object") {
 		Object.keys(url).forEach(u => {
 			mock(u, url[u])
 		})
-	} else if (url.indexOf("*") != -1) {
+	}
+
+	//url=v1/*/
+	//handler={
+	//	person:()=>{}
+	//}
+	//
+	else if (url.indexOf("*") != -1) {
 		let paths = url.split('*')
 		let pre = paths.shift()
 		Object.keys(handler).forEach(key => {
@@ -28,13 +39,24 @@ export function mock(url, handler) {
 	}
 }
 
+function isMockUrl(url) {
+	if (!_options.excludeMockUrls)
+		return _options.mock
+
+	if (_options.excludeMockUrls.find(o => o == url)) {
+		return !_options.mock
+	}
+	else {
+		return _options.mock
+	}
+}
 
 export function get(url, headers, option) {
 	if (!option || option.ignoreAOP !== true) {
 		before()
 	}
 
-	if (_options.mock) {
+	if (isMockUrl(url)) {
 		return new Promise((resolve, reject) => {
 			setTimeout(() => {
 				try {
@@ -67,7 +89,8 @@ export function get(url, headers, option) {
 			'Accept': 'application/json',
 			'Content-Type': 'application/json',
 			...headers,
-			token: getAccessToken()
+			token: getAccessToken(),
+			"Authorization": getAccessToken()? "Bearer " + getAccessToken() : ''
 		},
 
 	}
@@ -87,7 +110,7 @@ export function post(url, data, headers, option) {
 	if (!option || option.ignoreAOP !== true) {
 		before(url, data, headers)
 	}
-	if (_options.mock) {
+	if (isMockUrl(url)) {
 		return new Promise((resolve, reject) => {
 			setTimeout(() => {
 				try {
@@ -124,7 +147,8 @@ export function post(url, data, headers, option) {
 			'Accept': 'application/json',
 			'Content-Type': 'application/json',
 			...headers,
-			token: getAccessToken()
+			token: getAccessToken(),
+			"Authorization": getAccessToken()? "Bearer " + getAccessToken() : ''
 		},
 		body: JSON.stringify(data)
 	}
@@ -139,6 +163,32 @@ export function post(url, data, headers, option) {
 			.catch(error => reject(error))
 	})
 
+}
+
+export function formPost(url, data, isFree) {
+	data = data || {}
+	var accessToken = getAccessToken()//toke in sessionStorage
+	if (!!accessToken && !isFree) {
+		data.token = accessToken
+	}
+
+	var postForm = document.createElement("form")//表单对象
+	postForm.method = "post"
+	postForm.action = url
+	postForm.target = "_blank"
+
+	var keys = Object.keys(data)
+
+	for (var k of keys) {
+		var emailInput = document.createElement("input");//email input
+		emailInput.setAttribute("name", k)
+		emailInput.setAttribute("value", data[k])
+		postForm.appendChild(emailInput)
+	}
+
+	document.body.appendChild(postForm)
+	postForm.submit()
+	document.body.removeChild(postForm)
 }
 
 export function test(url, data, result) {
@@ -163,6 +213,7 @@ function after(response, url, data, headers) {
 	return response
 }
 
+
 function getAccessToken() {
 	return sessionStorage['_accessToken'] || '';
 }
@@ -180,6 +231,7 @@ export default {
 	fetch,
 	get,
 	post,
+	formPost,
 	test,
 	mockData,
 	mock,
