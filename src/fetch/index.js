@@ -97,7 +97,24 @@ export function get(url, headers, option) {
 
 	return new Promise((resolve, reject) => {
 		fetch(url, headers)
-			.then(response => response.json())
+			.then(response => {
+				let json = {}
+				let contentType = response.headers.get('Content-Type').split(";")[0]
+				if(contentType == 'application/json' ){
+					json = response.json()
+				}else if(contentType == 'application/octet-stream' ){
+						response.blob().then(blob => { let a = document.createElement('a')
+						let url = window.URL.createObjectURL(blob)   // 获取 blob 本地文件连接 (blob 为纯二进制对象，不能够直接保存到磁盘上)
+						let name = response.headers.get('Content-Disposition')
+						name = name.split('name=')[1].split(';')[0]
+						a.href = url
+						a.download = name
+						a.click()
+						window.URL.revokeObjectURL(url)
+					})
+				}
+				return json
+			})
 			.then(responseJson => {
 				responseJson = after(responseJson, url, undefined, headers)
 				resolve(responseJson)
@@ -155,7 +172,27 @@ export function post(url, data, headers, option) {
 
 	return new Promise((resolve, reject) => {
 		fetch(url, headers)
-			.then(response => response.json())
+			.then(response => {
+
+				let json = {}
+				let contentType = response.headers.get('Content-Type').split(";")[0]
+				if(contentType == 'application/json' ){
+					json = response.json()
+				}else if(contentType == 'application/octet-stream' ){
+					response.blob().then(blob => { 
+						let a = document.createElement('a')
+						let url = window.URL.createObjectURL(blob)   // 获取 blob 本地文件连接 (blob 为纯二进制对象，不能够直接保存到磁盘上)
+						let name = response.headers.get('Content-Disposition')
+						name = name.split('name=')[1].split(';')[0]
+						a.href = url
+						a.download = name
+						a.click()
+						window.URL.revokeObjectURL(url)
+					})
+				}
+				return json
+			
+			})
 			.then(responseJson => {
 				responseJson = after(responseJson, url, data, headers)
 				resolve(responseJson)
