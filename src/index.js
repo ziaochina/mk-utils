@@ -14,6 +14,7 @@ import tree from './tree'
 import history from './history'
 //import less from './less'
 import _ from 'lodash'
+import ui from './ui'
 
 export default {
 	//beautify,
@@ -31,5 +32,6 @@ export default {
 	tree,
 	history,
 	//less,
-	_
+	_,
+	ui
 }

@@ -29,12 +29,14 @@ function find(nodes, childPropName, matchFn){
 function map(nodes, childPropName, newChildPropName, mapFun){
     var ret = []
     for(let n of nodes){
-        if(n[childPropName]){
-            n[ newChildPropName || childPropName] = map(n[childPropName], childPropName, newChildPropName, mapFun)
+        //map不改变原来对象
+        let o = {...n}
+        if(o[childPropName]){
+            o[ newChildPropName || childPropName] = map(o[childPropName], childPropName, newChildPropName, mapFun)
             if(newChildPropName && newChildPropName != childPropName)
-                delete n[childPropName]
+                delete o[childPropName]
         }
-        ret.push(mapFun(n))
+        ret.push(mapFun(o))
     }
 
     return ret
