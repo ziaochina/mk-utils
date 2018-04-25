@@ -165,6 +165,169 @@ function gridColumn(key, title, width, isFlexGrow, align, bindPath, fieldName, e
     return ret
 }
 
+function gridInputColumn(gridName, key, title, width, isFlexGrow, required, align, bindPath, fieldName, ext = {}) {
+    return {
+        name: key,
+        component: 'DataGrid.Column',
+        columnKey: key,
+        flexGrow: isFlexGrow || 1,
+        width: width || 100,
+        header: {
+            name: 'header',
+            component: 'DataGrid.Cell',
+            children: [{
+                name: 'label',
+                component: '::label',
+                className: required ? 'ant-form-item-required' : '',
+                children: title
+            }]
+        },
+        cell: {
+            name: 'cell',
+            component: "{{$isFocus(_ctrlPath) ? 'Input' : 'DataGrid.TextCell'}}",
+            className: `{{$getCellClassName(_ctrlPath,'${align}')}}`,
+            value: `{{${bindPath}[_rowIndex].${fieldName}}}`,
+            onChange: `{{(e)=> $cellChange('${gridName}', _rowIndex, '${fieldName}', e.target.value)}}`,
+            _power: '({rowIndex})=>rowIndex',
+        },
+        ...ext
+    }
+}
+
+
+function gridNumberColumn(gridName, key, title, width, isFlexGrow, required, align, bindPath, fieldName, ext = {}) {
+    return {
+        name: key,
+        component: 'DataGrid.Column',
+        columnKey: key,
+        flexGrow: isFlexGrow || 1,
+        width: width || 100,
+        header: {
+            name: 'header',
+            component: 'DataGrid.Cell',
+            children: [{
+                name: 'label',
+                component: '::label',
+                className: required ? 'ant-form-item-required' : '',
+                children: title
+            }]
+        },
+        cell: {
+            name: 'cell',
+            component: "{{$isFocus(_ctrlPath) ? 'Input.Number' : 'DataGrid.TextCell'}}",
+            className: `{{$getCellClassName(_ctrlPath,'${align}')}}`,
+            value: `{{${bindPath}[_rowIndex].${fieldName}}}`,
+            onChange: `{{(v)=> $cellChange('${gridName}', _rowIndex, '${fieldName}', v)}}`,
+            _power: '({rowIndex})=>rowIndex',
+        },
+        ...ext
+    }
+}
+
+
+function gridDatePickerColumn(gridName, key, title, width, isFlexGrow, required, align, bindPath, fieldName, ext = {}) {
+    return {
+        name: key,
+        component: 'DataGrid.Column',
+        columnKey: key,
+        flexGrow: isFlexGrow || 1,
+        width: width || 100,
+        header: {
+            name: 'header',
+            component: 'DataGrid.Cell',
+            children: [{
+                name: 'label',
+                component: '::label',
+                className: required ? 'ant-form-item-required' : '',
+                children: title
+            }]
+        },
+        cell: {
+            name: 'cell',
+            component: "{{$isFocus(_ctrlPath) ? 'DatePicker' : 'DataGrid.TextCell'}}",
+            className: `{{$getCellClassName(_ctrlPath,'${align}')}}`,
+            value: `{{${bindPath}[_rowIndex].${fieldName}}}`,
+            onChange: `{{(v)=> $cellChange('${gridName}', _rowIndex, '${fieldName}', v)}}`,
+            value: `{{{
+                return $isFocus(_ctrlPath)
+                    ? $stringToMoment(${bindPath}[_rowIndex].${fieldName})
+                    : ${bindPath}[_rowIndex].${fieldName} && $stringToMoment(${bindPath}[_rowIndex].${fieldName}).format('YYYY-MM-DD')
+            }}}`,
+            onChange: `{{(v)=> $cellChange('${gridName}',_rowIndex, '${fieldName}',  $momentToString(v,'YYYY-MM-DD'))}}`,
+            _power: '({rowIndex})=>rowIndex',
+        },
+        ...ext
+    }
+}
+
+
+function gridSelColumn(grid, key, title, width, isFlexGrow, required, 
+    align, bindPath, dsPath, fieldName,valueIsObj = true, idFieldName, showFieldName,ext= {}){
+    return {
+        name: key,
+        component: 'DataGrid.Column',
+        columnKey: key,
+        flexGrow: isFlexGrow || 1,
+        width: width || 100,
+        header: {
+            name: 'header',
+            component: 'DataGrid.Cell',
+            children: [{
+                name: 'label',
+                component: '::label',
+                className: required ? 'ant-form-item-required' : '',
+                children: title
+            }]
+        },
+        cell: {
+            name: 'cell',
+            component: "{{$isFocus(_ctrlPath) ? 'Select' : 'DataGrid.TextCell'}}",
+            className: `{{$getCellClassName(_ctrlPath,'${align}')}}`,
+            value: `{{{
+                if( $isFocus(_ctrlPath) ){
+                    if(${valueIsObj}){
+                        return (${dsPath} &&  ${bindPath}[_rowIndex].${fieldName} &&  ${bindPath}[_rowIndex].${fieldName}.${idFieldName})
+                            || (${bindPath}[_rowIndex].${fieldName} && ${bindPath}[_rowIndex].${fieldName}.${showFieldName}) 
+                            || ''
+                    }
+                    else{
+                        return  ${bindPath}[_rowIndex].${fieldName}
+                    }
+                }
+                else{
+                    if(${valueIsObj}){
+                        return (${bindPath}[_rowIndex].${fieldName} && ${bindPath}[_rowIndex].${fieldName}.${showFieldName}) || ''
+                    }
+                    else{
+                        var v = ${bindPath}[_rowIndex].${fieldName} 
+                        return v && ${dsPath}.find(o=>o.${idFieldName}==v).${showFieldName}
+                    }
+                }
+            }}}`,
+            children: {
+                name: 'option',
+                component: 'Select.Option',
+                value: `{{${dsPath}[_lastIndex].${idFieldName}}}`,
+                children: `{{${dsPath}[_lastIndex].${showFieldName}}}`,
+                _power: `for in ${dsPath}`
+            },
+            onChange: `{{(v)=>{
+                if(${valueIsObj}){
+                    const obj = ${dsPath}.find(o=>o.${idFieldName}==v)
+                    $sf('${bindPath}.'+ _rowIndex + '.${fieldName}', $fromJS(obj,undefined))
+                }
+                else{
+                    $sf('${bindPath}.'+ _rowIndex + '.${fieldName}', v)
+                }
+            }}}`,
+            _excludeProps: "{{$isFocus(_ctrlPath)? ['onClick'] : ['children'] }}",
+            _power: '({rowIndex})=>rowIndex',
+        },
+        ...ext
+    }
+}
+
+
 function loopTreeChildrenInternal(data, childrenName) {
     if (!data) return null
     var ret = data.map((item) => {
@@ -195,8 +358,8 @@ function loopTreeChildren(data, childrenName = 'children') {
     return ret;
 }
 
-function treeFind(ds, v){
-    return tree.find(ds, 'children', n=>n.id ==v)
+function treeFind(ds, v) {
+    return tree.find(ds, 'children', n => n.id == v)
 }
 
 
@@ -218,8 +381,25 @@ function inputFormItem(key, title, required = false, bindPath, ext = {}) {
     }
 }
 
+function numberFormItem(key, title, required = false, bindPath, ext = {}) {
+    return {
+        name: key,
+        component: 'Form.Item',
+        label: title,
+        required: required,
+        children: [{
+            name: key,
+            component: 'Input.Number',
+            value: `{{${bindPath}}}`,
+            onChange: `{{(v)=>$sf('${bindPath}',v)}}`,
+        }],
+        ...ext
+    }
+}
+
+
 function treeSelectFormItem(key, title, required = false, bindPath,
-    dsPath, loopChildrenHandlerName,  focusHandlerName, 
+    dsPath, idFieldName, showFieldName, loopChildrenHandlerName, focusHandlerName,
     treeFindHandlerName, ext = {}) {
     var ret = {
         name: key,
@@ -236,14 +416,14 @@ function treeSelectFormItem(key, title, required = false, bindPath,
             onChange: `{{(v)=>{
                 $sf('${bindPath}', $fromJS($${treeFindHandlerName}(${dsPath},v), null))
             }}}`,
-            onFocus:  focusHandlerName ? `{{$${focusHandlerName}(data)}}`: undefined,
+            onFocus: focusHandlerName ? `{{$${focusHandlerName}(data)}}` : undefined,
             value: `{{{
-                return (${dsPath} && ${bindPath} && ${bindPath}.id) || (${bindPath} && ${bindPath}.name) || ''
+                return (${dsPath} && ${bindPath} && ${bindPath}.${idFieldName}) || (${bindPath} && ${bindPath}.${showFieldName}) || ''
             }}}`,
             children: `{{$${loopChildrenHandlerName}(${dsPath})}}`,
         }],
         ...ext
-    }   
+    }
     return ret
 }
 
@@ -269,7 +449,7 @@ function loopTreeSelectChildren(ds) {
 
 
 function selectFormItem(key, title, required = false, bindPath,
-    dsPath, focusHandlerName, ext = {}) {
+    dsPath, valueIsObj=true, idFieldName, showFieldName, focusHandlerName, ext = {}) {
     return {
         name: key,
         component: 'Form.Item',
@@ -281,24 +461,38 @@ function selectFormItem(key, title, required = false, bindPath,
             showSearch: true,
             treeDefaultExpandAll: true,
             dropdownStyle: { maxHeight: 400, overflow: 'auto' },
-            onChange: `{{(v)=> $sf('${bindPath}', $fromJS(${dsPath}.find(o=>o.id==v), null))}}`,
-            onFocus: focusHandlerName ? `{{$${focusHandlerName}(data)}}`: undefined,
+            onChange: `{{{
+               return (v)=> {
+                   if(${valueIsObj}){
+                       $sf('${bindPath}', $fromJS(${dsPath}.find(o=>o.${idFieldName}==v), null))    
+                   }
+                   else{
+                        $sf('${bindPath}', v)    
+                   }
+               }
+            }}}`,
+            onFocus: focusHandlerName ? `{{$${focusHandlerName}(data)}}` : undefined,
             value: `{{{
-                return (${dsPath} && ${bindPath} && ${bindPath}.id) || (${bindPath} && ${bindPath}.name) || ''
+                if(${valueIsObj}){
+                    return (${dsPath} && ${bindPath} && ${bindPath}.${idFieldName}) || (${bindPath} && ${bindPath}.${showFieldName}) || ''
+                }
+                else{
+                    return ${bindPath} + ''
+                }
             }}}`,
             children: {
                 name: 'option',
                 component: 'Select.Option',
-                value: `{{ ${dsPath} && ${dsPath}[_rowIndex].id }}`,
-                children: `{{ ${dsPath} && ${dsPath}[_rowIndex].name }}`,
+                value: `{{ ${dsPath} && ${dsPath}[_rowIndex].${idFieldName} }}`,
+                children: `{{ ${dsPath} && ${dsPath}[_rowIndex].${showFieldName} }}`,
                 _power: `for in ${dsPath}`
             }
         }],
         ...ext
-    }   
+    }
 }
 
-function datePickerFormItem(key, title, required=false, bindPath, ext={}){
+function datePickerFormItem(key, title, required = false, bindPath, ext = {}) {
     return {
         name: key,
         component: 'Form.Item',
@@ -315,8 +509,8 @@ function datePickerFormItem(key, title, required=false, bindPath, ext={}){
 
 
 
-function toToastContent(msg){
-    return  ( <ul style={{ textAlign: 'left' }}>
+function toToastContent(msg) {
+    return (<ul style={{ textAlign: 'left' }}>
         {msg.map(o => <li>{o}</li>)}
     </ul>)
 }
@@ -329,8 +523,13 @@ export default {
     gridDelColumn,
     gridLinkColumn,
     gridColumn,
+    gridInputColumn,
+    gridNumberColumn,
+    gridDatePickerColumn,
+    gridSelColumn,
     loopTreeChildren,
     inputFormItem,
+    numberFormItem,
     treeSelectFormItem,
     loopTreeSelectChildren,
     treeFind,
