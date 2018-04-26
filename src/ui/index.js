@@ -224,6 +224,35 @@ function gridNumberColumn(gridName, key, title, width, isFlexGrow, required, ali
     }
 }
 
+function gridCheckboxColumn(gridName, key, title, width, isFlexGrow, required, align, bindPath, fieldName, ext = {}) {
+    return {
+        name: key,
+        component: 'DataGrid.Column',
+        columnKey: key,
+        flexGrow: isFlexGrow || 1,
+        width: width || 100,
+        header: {
+            name: 'header',
+            component: 'DataGrid.Cell',
+            children: [{
+                name: 'label',
+                component: '::label',
+                className: required ? 'ant-form-item-required' : '',
+                children: title
+            }]
+        },
+        cell: {
+            name: 'cell',
+            component: "{{$isFocus(_ctrlPath) ? 'Checkbox' : 'DataGrid.TextCell'}}",
+            className: `{{$getCellClassName(_ctrlPath,'${align}')}}`,
+            checked: `{{${bindPath}[_rowIndex].${fieldName}}}`,
+            onChange: `{{(e)=> $cellChange('${gridName}', _rowIndex, '${fieldName}', e.target.value)}}`,
+            _power: '({rowIndex})=>rowIndex',
+        },
+        ...ext
+    }
+}
+
 
 function gridDatePickerColumn(gridName, key, title, width, isFlexGrow, required, align, bindPath, fieldName, ext = {}) {
     return {
@@ -397,6 +426,22 @@ function numberFormItem(key, title, required = false, bindPath, ext = {}) {
     }
 }
 
+function checkboxFormItem(key, title, required = false, bindPath, ext = {}) {
+    return {
+        name: key,
+        component: 'Form.Item',
+        label: title,
+        required: required,
+        children: [{
+            name: key,
+            component: 'Checkbox',
+            checked: `{{${bindPath}}}`,
+            onChange: `{{(e)=>$sf('${bindPath}',e.target.value)}}`,
+        }],
+        ...ext
+    }
+}
+
 
 function treeSelectFormItem(key, title, required = false, bindPath,
     dsPath, idFieldName, showFieldName, loopChildrenHandlerName, focusHandlerName,
@@ -526,10 +571,12 @@ export default {
     gridInputColumn,
     gridNumberColumn,
     gridDatePickerColumn,
+    gridCheckboxColumn,
     gridSelColumn,
     loopTreeChildren,
     inputFormItem,
     numberFormItem,
+    checkboxFormItem,
     treeSelectFormItem,
     loopTreeSelectChildren,
     treeFind,
