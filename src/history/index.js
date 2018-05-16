@@ -107,6 +107,10 @@ function pushChildApp(selfApp, childApp) {
     hashHistory.push(getAlias(segs.join('/')))
 }
 
+function goBack(){
+    hashHistory.goBack()
+}
+
 
 export default {
     config,
@@ -114,5 +118,6 @@ export default {
     unlisten,
     getChildApp,
     pushChildApp,
+    goBack,
     location: hashHistory ? hashHistory.location : null
 }
