@@ -273,6 +273,7 @@ export default {
 	mockData,
 	mock,
 	mockApi,
+	isMockUrl,
 	getAccessToken,
 	setAccessToken,
 	clearAccessToken
