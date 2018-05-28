@@ -43,7 +43,7 @@ function map(nodes, childPropName, newChildPropName, mapFun) {
 }
 
 
-function loopTreeChildrenInternal(data, childrenProp, keyProp, titleProp) {
+function loopTreeChildrenInternal(data, childrenProp, keyProp, titleProp, codeProp) {
     if (!data) return null
     var ret = data.map((item) => {
         if (item[childrenProp] && item[childrenProp].length) {
@@ -51,24 +51,24 @@ function loopTreeChildrenInternal(data, childrenProp, keyProp, titleProp) {
                 name: item[keyProp],
                 component: 'Tree.TreeNode',
                 key: item[keyProp],
-                title: item[titleProp],
-                children: loopTreeChildrenInternal(item[childrenProp], childrenProp, keyProp, titleProp)
+                title: (codeProp && typeof(codeProp) == 'string') ? `(${item[codeProp]})${item[titleProp]}` : item[titleProp],
+                children: loopTreeChildrenInternal(item[childrenProp], childrenProp, keyProp, titleProp, codeProp)
             }
         }
         return {
             name: item[keyProp],
             component: 'Tree.TreeNode',
             key: item[keyProp],
-            title: item[titleProp]
+            title: (codeProp && typeof(codeProp) == 'string')  ? `(${item[codeProp]})${item[titleProp]}` : item[titleProp]
         }
     })
     return ret
 }
 
-function loopTreeChildren(data, childrenProp = 'children', keyProp = 'id', titleProp = 'name') {
+function loopTreeChildren(data, childrenProp = 'children', keyProp = 'id', titleProp = 'name', codeProp = 'code') {
     var ret = {
         _isMeta: true,
-        value: loopTreeChildrenInternal(data, childrenProp, keyProp, titleProp)
+        value: loopTreeChildrenInternal(data, childrenProp, keyProp, titleProp, codeProp)
     }
     return ret;
 }
