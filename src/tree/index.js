@@ -74,7 +74,7 @@ function loopTreeChildren(data, childrenProp = 'children', keyProp = 'id', title
 }
 
 
-function loopTreeSelectChildren(data, childrenProp = 'children', keyProp = 'id', titleProp = 'name') {
+function loopTreeSelectChildren(data, childrenProp = 'children', keyProp = 'id', titleProp = 'name', codeProp) {
     if (!data)
         return
 
@@ -84,7 +84,7 @@ function loopTreeSelectChildren(data, childrenProp = 'children', keyProp = 'id',
             name: n[keyProp],
             component: 'TreeSelect.TreeNode',
             key: n[keyProp],
-            title: n[titleProp],
+            title: (n[codeProp] && `(${n[codeProp]})${n[titleProp]}`) || '',
             value: n[keyProp],
             children: n[childrenProp]
         }))
