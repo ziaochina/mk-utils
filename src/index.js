@@ -15,6 +15,7 @@ import history from './history'
 //import less from './less'
 import _ from 'lodash'
 import ui from './ui'
+import pubSub from 'pubsub-js'
 
 export default {
 	//beautify,
@@ -33,5 +34,6 @@ export default {
 	history,
 	//less,
 	_,
-	ui
+	ui,
+	pubSub
 }
