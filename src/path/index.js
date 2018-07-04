@@ -1,4 +1,5 @@
 import React from 'react'
+import _ from 'lodash'
 
 /**
  * [是否存在参数]
@@ -67,7 +68,7 @@ function findPathByEvent(e) {
 
 
 export default {
-    parsePath,
+    parsePath : _.memoize(parsePath),
     existsParamsInPath,
     findPathByEvent
 }

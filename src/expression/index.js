@@ -1,3 +1,4 @@
+import _ from 'lodash'
 /**
  * 元数据中表达式需要的一些函数
  */
@@ -26,7 +27,8 @@ function getExpressionBody(v){
     return v
 }
 
+
 export default {
-    isExpression,
-    getExpressionBody
+    isExpression: _.memoize(isExpression),
+    getExpressionBody: _.memoize(getExpressionBody)
 }
