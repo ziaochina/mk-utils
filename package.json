@@ -1,6 +1,6 @@
 {
   "name": "mk-utils",
-  "version": "1.0.75",
+  "version": "2.0.0",
   "description": "mk-utils",
   "main": "./lib/index.js",
   "scripts": {
@@ -20,30 +20,31 @@
   },
   "homepage": "https://github.com/ziaochina/mk-utils#readme",
   "dependencies": {
-    "history": "^4.7.2",
-    "js-beautify": "^1.7.5",
-    "jsondiffpatch": "^0.2.4",
+    "history": "*",
+    "js-beautify": "*",
+    "jsondiffpatch": "*",
     "less": "^2.7.2",
-    "lodash": "^4.17.5",
-    "moment": "^2.20.1",
-    "pubsub-js": "^1.6.0",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
-    "whatwg-fetch": "^2.0.3"
+    "lodash": "*",
+    "moment": "*",
+    "pubsub-js": "*",
+    "react": "*",
+    "react-dom": "*",
+    "whatwg-fetch": "*"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.2",
-    "babel-plugin-add-module-exports": "^0.2.1",
-    "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-react": "^6.24.1",
-    "babel-preset-stage-0": "^6.24.1",
-    "cross-env": "^5.1.3",
-    "css-loader": "^0.28.9",
-    "extract-text-webpack-plugin": "^3.0.2",
-    "style-loader": "^0.19.1",
-    "webpack": "^3.10.0"
+    "babel-cli": "*",
+    "babel-core": "*",
+    "babel-loader": "*",
+    "babel-plugin-add-module-exports": "*",
+    "babel-plugin-transform-runtime": "*",
+    "babel-preset-env": "*",
+    "babel-preset-react": "*",
+    "babel-preset-stage-0": "*",
+    "cross-env": "*",
+    "css-loader": "*",
+    "extract-text-webpack-plugin": "*",
+    "style-loader": "*",
+    "webpack": "*",
+    "webpack-cli": "*"
   }
 }
